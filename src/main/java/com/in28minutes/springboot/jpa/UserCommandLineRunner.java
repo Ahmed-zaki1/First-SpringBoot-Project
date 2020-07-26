@@ -22,6 +22,11 @@ private static final Logger log = LoggerFactory.getLogger(UserCommandLineRunner.
 	for(User user : repository.findAll()) {
 		log.info(user.toString());
 	}
+	log.info("The Admins Are");
+	log.info("--------------");
+	for(User user : repository.findByRole("User")) {
+		log.info(user.toString());	
+	}
 	}
 
 }
