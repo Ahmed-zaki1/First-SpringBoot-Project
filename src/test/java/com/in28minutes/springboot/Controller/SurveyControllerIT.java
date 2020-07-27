@@ -1,6 +1,7 @@
 package com.in28minutes.springboot.Controller;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.in28minutes.springboot.Application;
@@ -37,9 +39,9 @@ public class SurveyControllerIT {
 
 	@Before
 	public void before() {
-
+		headers.add("Authorization", createHttpAuthenticationHeaderValue(
+				"Zaki", "Adnan"));
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
 	}
 
 	@Test
@@ -98,6 +100,19 @@ public class SurveyControllerIT {
 
 	private String createURLWithPort(final String uri) {
 		return "http://localhost:" + port + uri;
+	}
+
+	private String createHttpAuthenticationHeaderValue(String userId,
+			String password) {
+
+		String auth = userId + ":" + password;
+
+		byte[] encodedAuth = Base64.encode(auth.getBytes(Charset
+				.forName("US-ASCII")));
+
+		String headerValue = "Basic " + new String(encodedAuth);
+
+		return headerValue;
 	}
 
 }	
